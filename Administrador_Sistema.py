@@ -1,4 +1,4 @@
-import Tkinter as tk
+from tkinter import *
 
 class App(Frame):
     def __init__(self, master = None):
@@ -10,8 +10,6 @@ class App(Frame):
         self.quitButton = Button (self, text = "Close", command = self.quit)
         self.quitButton.grid()
 
-if __name__ == "__main__":
-    app = App()
-    app.master.title("Administrador del Sistema")
-    app.mainloop()
-    pass
+app = App()
+app.master.title("Administrador del Sistema")
+app.mainloop()
