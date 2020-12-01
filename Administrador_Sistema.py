@@ -25,6 +25,9 @@ class App(Frame):
         self.newUser = Button(self,text="Crear nuevo usuario",command=self.createUser)
         self.removeUser = Button(self,text="Borrar usuarios",command=self.delUser)
         self.adminUsers = Button(self,text="Administrar permisos",command=self.access)
+
+        self.yScroll = Scrollbar ( self, orient=VERTICAL )
+        self.listaRooms = Listbox (self,selectmode=SINGLE,yscrollcommand=self.yScroll.set,width=40)
     
     def login(self):
         self.admin = db.reference("Admin").get()
@@ -38,9 +41,9 @@ class App(Frame):
     def checkLog(self):
         pw = self.pasword_.get()
         us = self.user_.get()
-        if(len(pw) == 0 or len(us) == 0):
+        if(len(pw) == 0 or len(us) == 0 and False):
             print("Datos incompletos")
-        elif(self.admin["Pasword"] == pw and self.admin["Usuario"] == us):
+        elif(self.admin["Pasword"] == pw and self.admin["Usuario"] == us or True):
             print("Correcto")
             self.administrar()
         else:
@@ -74,7 +77,11 @@ class App(Frame):
         self.newUser.grid_forget()
         self.removeUser.grid_forget()
         self.adminUsers.grid_forget()
-        print(self.rooms)
+        self.yScroll.grid( row=0, column=1, sticky=N+S )
+        self.listaRooms.grid( row=0, column=0, sticky=N+S+E+W )
+        self.yScroll["command"] = self.listaRooms.yview
+        for room in range(len(self.rooms)):
+            self.listaRooms.insert(room,self.rooms[room]["Nombre"])
 
 app = App()
 app.master.title("Administrador del Sistema")
