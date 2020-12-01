@@ -16,12 +16,15 @@ class App(Frame):
         firebase_admin.initialize_app(cred, {"databaseURL":"https://controlacceso-iot.firebaseio.com/"})
 
     def createWidgets(self):
-        self.user  = Label(self,text="User:")
+        self.user  = Label(self,text="Usuario:")
         self.user_ = Entry(self)
-        self.pasword  = Label(self,text="Pasword:")
+        self.pasword  = Label(self,text="Contraseña:")
         self.pasword_ = Entry(self,show='*',exportselection=0)
         self.loginButton = Button(self,text="Login",command=self.checkLog)
         self.quitButton  = Button(self,text="Close",command=self.quit)
+        self.newUser = Button(self,text="Crear nuevo usuario",command=self.createUser)
+        self.removeUser = Button(self,text="Borrar usuarios",command=self.delUser)
+        self.adminUsers = Button(self,text="Administrar permisos",command=self.access)
     
     def login(self):
         self.admin = db.reference("Admin").get()
@@ -46,13 +49,32 @@ class App(Frame):
             self.pasword_.delete(0,last=len(pw))
 
     def administrar(self):
-        self.users = db.reference("Usuarios")
+        self.dbUsers = db.reference("Usuarios")
+        self.dbRooms = db.reference("Habitacion")
+        self.users = self.dbUsers.get()
+        self.rooms = self.dbRooms.get()
         self.user.grid_forget()
         self.user_.grid_forget()
         self.pasword.grid_forget()
         self.pasword_.grid_forget()
         self.loginButton.grid_forget()
+        self.quitButton.grid_forget()
+        self.newUser.grid(row=1,columnspan=2,sticky=N+S+E+W)
+        self.removeUser.grid(row=2,columnspan=2,sticky=N+S+E+W)
+        self.adminUsers.grid(row=3,columnspan=2,sticky=N+S+E+W)
+        self.quitButton.grid(column=1, sticky=E)
 
+    def createUser(self):
+        execfile("01_face_dataset.py")
+
+    def delUser(self):
+        print(self.users)
+
+    def access(self):
+        self.newUser.grid_forget()
+        self.removeUser.grid_forget()
+        self.adminUsers.grid_forget()
+        print(self.rooms)
 
 app = App()
 app.master.title("Administrador del Sistema")
